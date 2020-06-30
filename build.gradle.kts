@@ -4,8 +4,6 @@ plugins {
 
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
-    `maven-publish`
-    maven
 }
 
 repositories {
@@ -33,6 +31,15 @@ dependencies {
     implementation("io.arrow-kt:arrow-core-data:${arrowVersion}")
 
     implementation("nl.knaw.huygens.alexandria:alexandria-markup-core:2.3")
+
+    // Use tablesaw for visualisation
+    val tablesawVersion = "0.38.1"
+    implementation("tech.tablesaw:tablesaw-core:${tablesawVersion}")
+    implementation("tech.tablesaw:tablesaw-jsplot:${tablesawVersion}")  //  for creating charts
+    implementation("tech.tablesaw:tablesaw-html:${tablesawVersion}")    // for using HTML
+//    implementation("tech.tablesaw:tablesaw-beakerx:${tablesawVersion}") // for using Tablesaw inside BeakerX
+//    implementation("tech.tablesaw:tablesaw-excel:${tablesawVersion}")   //  for using Excel workbooks
+//    implementation("tech.tablesaw:tablesaw-json:${tablesawVersion}")    // for using JSON
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")

@@ -31,3 +31,5 @@ build
 .idea
 *.iml
 list
+testoutput
+out
