@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
 import tech.tablesaw.api.*
 import tech.tablesaw.plotly.Plot
 import tech.tablesaw.plotly.api.LinePlot
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -29,7 +30,7 @@ fun main() {
     val results: MutableList<BenchmarkResult> = mutableListOf()
     val tmpDir: Path = mkTmpDir()
     val store = BDBTAGStore(tmpDir.toString(), false)
-    for (path in sourcePaths.subList(0, 9)) {
+    for (path in sourcePaths) {
         val filesize = Files.size(path)
         print("parsing $path ($filesize):")
         val tagml = FileUtils.readFileToString(path.toFile(), "UTF-8").trim { it <= ' ' }
@@ -96,16 +97,19 @@ private fun plot(results: List<BenchmarkResult>) {
     val fileSizeLabel = "file size (b)"
     val medianParseTimeLabel = "median parse time (ms)"
     val averageParseTimeLabel = "average parse time (ms)"
+    val totalNodesLabel = "total nodes"
     val table = Table.create("Alexandria benchmark")
             .addColumns(
                     StringColumn.create("filename", results.map { it.file }),
                     LongColumn.create(fileSizeLabel, *results.map { it.fileSize }.toLongArray()),
                     IntColumn.create("markup nodes", *results.map { it.markupNodes }.toIntArray()),
                     IntColumn.create("text nodes", *results.map { it.textNodes }.toIntArray()),
+                    IntColumn.create(totalNodesLabel, *results.map { it.textNodes + it.markupNodes }.toIntArray()),
                     DoubleColumn.create(averageParseTimeLabel, *results.map { it.parseTimes.average() }.toDoubleArray()),
                     LongColumn.create(medianParseTimeLabel, *results.map { it.parseTimes.median() }.toLongArray())
             )
-    println(table)
+    table.write().csv("benchmark.csv")
+    FileUtils.writeStringToFile(File("benchmark.txt"), table.printAll(), "UTF-8")
     Plot.show(
             LinePlot.create(
                     "file size / median parse time",
@@ -120,5 +124,12 @@ private fun plot(results: List<BenchmarkResult>) {
                     table,
                     fileSizeLabel,
                     averageParseTimeLabel
+            ))
+    Plot.show(
+            LinePlot.create(
+                    "total nodes / median parse time",
+                    table.sortAscendingOn(totalNodesLabel, medianParseTimeLabel),
+                    totalNodesLabel,
+                    medianParseTimeLabel
             ))
 }
