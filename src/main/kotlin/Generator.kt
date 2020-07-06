@@ -20,5 +20,4 @@ fun main() {
         )
         FileUtils.writeStringToFile(file, tagml, "UTF-8")
     }
-
 }

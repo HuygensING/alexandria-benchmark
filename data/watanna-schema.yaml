@@ -1,0 +1,46 @@
+{
+  ":schema" : {
+    "A" : {
+      "excerpt" : {
+          "chapter" : {
+            "img", "pers", "said" : ["said", "pers"]
+              }
+            }
+          }
+
+    "A2": {"said"}
+
+    "B" : {
+      "excerpt" : {
+          "chapter" : {
+              "img", "emph", "par" : {
+                  "s" : ["sic", "corr"]
+                  } 
+                }
+              }
+            }
+          }
+        }
+
+# layer A
+# tag: excerpt // attributes: type (value: string); title (value: string); author (value: pointer); year (value: int); page (value: int); pers (list of nested annotations: [att: id (value: pointer), att: name (value: string)]); source_id (value: string)
+# tag: chapter // att: n (value: int)
+# tag: img // att: source (value: string)
+# tag: pers // att: id (value: pointer)
+# tag: said // att: who (value: pointer)
+# tag: emph
+
+# layer A2
+# tag: said // att: who (value: pointer)
+# note: layer created to handle an instance of self-overlap of "said" element
+
+# layer B
+# tag: excerpt 
+# tag: chapter
+# tag: img
+# tag: par // att: n (value: string)
+# tag: s
+# tag: sic
+# tag: corr
+
+
